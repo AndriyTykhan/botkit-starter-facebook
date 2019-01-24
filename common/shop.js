@@ -2,29 +2,38 @@ const { to } = require('await-to-js');
 const store = require('../helpers/bestbuy/store.js');
 const BotError = require('../helpers/errors/error');
 const errors = require('../helpers/errors/error-messages');
+const Goods = require('../helpers/db/models/Good');
 
 module.exports = async (bot, message) => {
-  const [err, items] = await to(store());
+  let [dberr, goods] = await to(Goods.find());
+  if (dberr) throw new BotError(errors.findGoodsError);
 
-  if (err) throw new BotError(errors.getItemsError);
-  if (!items) throw new BotError(errors.noAviableProducts);
+  if (!goods.length) await store();
+
+  [dberr, goods] = await to(Goods.find());
+  if (dberr) throw new BotError(errors.noAviableProducts);
 
   const elements = [];
-  for (let i = 0; i <= 5; i++) {
+  goods.forEach((item) => {
     const element = {
-      title: items[i].name,
-      image_url: items[i].image,
+      title: item.name,
+      image_url: item.image,
       buttons: [
         {
           type: 'postback',
           title: 'Info',
-          payload: `getSingleInfo:${items[i].name}`,
+          payload: `getSingleInfofor:${item.upc}`,
+        },
+        {
+          type: 'postback',
+          title: 'Buy',
+          payload: `buyItem:${item.upc}`,
         },
       ],
     };
-
     elements.push(element);
-  }
+  });
+
   const attachment = {
     type: 'template',
     payload: {
