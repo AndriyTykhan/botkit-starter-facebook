@@ -1,5 +1,4 @@
 const debug = require('debug')('botkit:incoming_webhooks');
-const orderItems = require('../../common/order_items');
 
 // eslint-disable-next-line func-names
 module.exports = function (webserver, controller) {
@@ -8,15 +7,15 @@ module.exports = function (webserver, controller) {
     // NOTE: we should enforce the token check
     // respond to Slack that the webhook has been received.
     const data = req.body;
-    if (data.object === 'page') {
-      data.entry.forEach((entry) => {
-        entry.messaging.forEach((event) => {
-          if (event.message) {
-            orderItems(event);
-          }
-        });
-      });
-    }
+    // if (data.object === 'page') {
+    //   data.entry.forEach((entry) => {
+    //     entry.messaging.forEach((event) => {
+    //       if (event.message) {
+    //         orderItems(event);
+    //       }
+    //     });
+    //   });
+    // }
 
 
     res.status(200);

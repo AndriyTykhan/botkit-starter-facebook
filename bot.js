@@ -1,37 +1,14 @@
-/* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-           ______     ______     ______   __  __     __     ______
-          /\  == \   /\  __ \   /\__  _\ /\ \/ /    /\ \   /\__  _\
-          \ \  __<   \ \ \/\ \  \/_/\ \/ \ \  _"-.  \ \ \  \/_/\ \/
-           \ \_____\  \ \_____\    \ \_\  \ \_\ \_\  \ \_\    \ \_\
-            \/_____/   \/_____/     \/_/   \/_/\/_/   \/_/     \/_/
-
-
-This is a sample Facebook bot built with Botkit.
-
-# RUN THE BOT:
-  Follow the instructions here to set up your Facebook app and page:
-    -> https://developers.facebook.com/docs/messenger-platform/implementation
-  Run your bot from the command line:
-    page_token=<MY PAGE TOKEN> verify_token=<MY_VERIFY_TOKEN> node bot.js
-
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 require('dotenv').config();
-// const env = require('node-env-file');
 
 const mongoose = require('mongoose');
 
 const db = mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true });
-
 
 db.then(() => {
   console.log('Status: OK');
 }).catch((e) => {
   console.error('e');
 });
-
-// env(`${__dirname}/.env`);
-
 
 if (!process.env.page_token) {
   console.log('Error: Specify a Facebook page_token in environment.');
@@ -48,31 +25,20 @@ if (!process.env.verify_token) {
 const Botkit = require('botkit');
 const debug = require('debug')('botkit:main');
 
-// Create the Botkit controller, which controls all instances of the bot.
 const controller = Botkit.facebookbot({
-  // debug: true,
   verify_token: process.env.verify_token,
   access_token: process.env.page_token,
   studio_token: process.env.studio_token,
   studio_command_uri: process.env.studio_command_uri,
 });
 
-// Set up an Express-powered webserver to expose oauth and webhook endpoints
 const webserver = require(`${__dirname}/components/express_webserver.js`)(controller);
 
-// Tell Facebook to start sending events to this application
 require(`${__dirname}/components/subscribe_events.js`)(controller);
-
-// Set up Facebook "thread settings" such as get started button, persistent menu
 require(`${__dirname}/components/thread_settings.js`)(controller);
 
-
-// Send an onboarding message when a user activates the bot
 require(`${__dirname}/components/onboarding.js`)(controller);
-
-// Load in some helpers that make running Botkit on Glitch.com better
 require(`${__dirname}/components/plugin_glitch.js`)(controller);
-
 require(`${__dirname}/common/identify_user.js`)(controller);
 
 const normalizedPath = require('path').join(__dirname, 'skills');

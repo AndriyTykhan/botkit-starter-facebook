@@ -20,7 +20,7 @@ module.exports = (bot, message) => {
       {
         content_type: 'text',
         title: 'To invite a friend',
-        payload: '<POSTBACK_PAYLOAD>',
+        payload: 'To invite a friend',
       },
     ],
   });

@@ -2,6 +2,7 @@ const shop = require('../common/shop');
 const sendLocation = require('../common/send_location');
 const shopingList = require('../common/shoping_list');
 const myPurchases = require('../common/my_purshases');
+const inviteFriend = require('../common/invite_friends');
 const quickReply = require('../common/singe_quick_reply');
 const User = require('../helpers/db/models/User');
 
@@ -34,7 +35,9 @@ module.exports = (controller) => {
         break;
       case 'My purchases':
         myPurchases(bot, message);
-        console.log('Yep');
+        break;
+      case 'To invite a friend':
+        inviteFriend(bot, message);
         break;
       default:
         break;

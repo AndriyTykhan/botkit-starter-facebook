@@ -11,15 +11,6 @@ module.exports = async (bot, message, upc) => {
   const [dberr, good] = await to(Goods.findOne({ upc }));
   if (dberr) throw new BotError(errors.findGoodsError);
 
-  const currentItem = {
-    name: good.name,
-    upc: good.upc,
-    image: good.image,
-    description: good.description,
-  };
-
-  await User.findOneAndUpdate({ psid: senderPsid }, { currentItem });
-
   const attachment = {
     type: 'template',
     payload: {

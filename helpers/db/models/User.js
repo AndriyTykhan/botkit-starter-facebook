@@ -19,7 +19,7 @@ const UserShema = new Schema({
   psid: { type: String },
   name: { type: String },
   phone: { type: Number },
-  currentItem: {},
+  referrals: [],
   shopingList: [shopingList],
   purshases: [Purshases],
 
